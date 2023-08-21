@@ -29,6 +29,7 @@ export default function UserMenu({ loggedInUser }) {
 
   const handleLogout = () => {
     dispatch(logout());
+    localStorage.clear();
     Swal.fire(`Yaa logout!`, "Logout Successful!", "success");
     navigate("/");
   };

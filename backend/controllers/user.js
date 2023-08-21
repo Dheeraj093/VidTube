@@ -161,6 +161,59 @@ const savedVideo = async (req, res, next) => {
   }
 };
 
+const removeVideo = async (req, res, next) => {
+  const videoId = req.params.videoId;
+  const userId = req.user._id;
+  try {
+    await User.findByIdAndUpdate(userId, {
+       $pull: { saved: videoId },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Video has been Romoved!",
+    });
+  } catch (error) {
+    console.log(error);
+    return next(error);
+  }
+};
+
+const addHistory = async (req, res, next) => {
+  const videoId = req.params.videoId;
+  const userId = req.user._id;
+  try {
+    await User.findByIdAndUpdate(userId, {
+       $push: { history: videoId },   
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Video has been Saved in History!",
+    });
+  } catch (error) {
+    console.log(error);
+    return next(error);
+  }
+};
+
+const removeAllHistory = async (req, res, next) => {
+  const userId = req.user._id;
+  try {
+     await User.findByIdAndUpdate(userId, { 
+       $set: { history: [] } 
+      });
+
+    res.status(200).json({
+      success: true,
+      message: "History has been Deleted!",
+    });
+  } catch (error) {
+    console.log(error);
+    return next(error);
+  }
+};
+
 module.exports = {
   updateUser,
   deleteUser,
@@ -170,4 +223,7 @@ module.exports = {
   likeVideo,
   dislikeVideo,
   savedVideo,
+  removeVideo,
+  addHistory,
+  removeAllHistory,
 };

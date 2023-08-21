@@ -12,15 +12,15 @@ import {
 } from "../redux/videosSlice";
 import Loader from "../components/Loader";
 
-
 const Container = styled.div`
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
 `;
 
-const Home = ({ type }) => {
-  const dispatch = useDispatch();
+
+const MyVideos = () => {
+   const dispatch = useDispatch();
   const { videos, loading } = useSelector((state) => state.videos);
   const { loggedInUser } = useSelector((state) => state.user);
   // console.log(loggedInUser)
@@ -28,18 +28,13 @@ const Home = ({ type }) => {
     const fetchVideos = async () => {
       dispatch(fetchVideosStart());
       try {
-        if(type==="sub"){
-           const res = await axiosInstance.get(`/videos/${type}/${loggedInUser.user._id}`,{
+        const res = await axiosInstance.get(`/videos/myvideos/${loggedInUser.user._id}`,{
            headers: {
            Authorization: `${loggedInUser.token}`
          }
        });
-         dispatch(fetchVideosSuccess(res.data.videos));
-      }
-      else{
-        const res = await axiosInstance.get(`/videos/${type}`)
         dispatch(fetchVideosSuccess(res.data.videos));
-      }
+     
       } catch (error) {
         console.log(error);
         Swal.fire({
@@ -52,7 +47,7 @@ const Home = ({ type }) => {
     };
 
     fetchVideos();
-  }, [dispatch, type]);
+  }, [dispatch,loggedInUser]);
 
   if (loading) {
     return <Loader />;
@@ -60,10 +55,10 @@ const Home = ({ type }) => {
 
   return (
     <Container>
-      {videos?.length > 0 &&
+        {videos?.length > 0 &&
         videos?.map((video) => <Card key={video._id} video={video} />)}
     </Container>
-  );
-};
+  )
+}
 
-export default Home;
+export default MyVideos

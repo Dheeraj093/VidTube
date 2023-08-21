@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import styled, { ThemeProvider } from "styled-components";
 import Navbar from "./components/Navbar";
@@ -7,11 +7,14 @@ import Home from "./pages/Home";
 import Signin from "./pages/Signin";
 import Video from "./pages/Video";
 import { darkTheme, lightTheme } from "./utils/Theme";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Search from "./pages/Search";
 import Signup from "./pages/Signup";
 import Tags from "./components/Tags"
 import SavedVideos from "./components/SavedVideos";
+import History from "./components/History";
+import MyVideos from "./components/MyVideos";
+import { loginSuccess } from "./redux/userSlice";
 
 const Container = styled.div`
   display: flex;
@@ -25,8 +28,15 @@ const Wrapper = styled.div`
 `;
 
 const App = () => {
+  const dispatch = useDispatch();
   const [darkMode, setDarkMode] = useState(true);
   const { loggedInUser } = useSelector((state) => state.user);
+  useEffect (() =>{
+   if(!loggedInUser) {
+        const user = JSON.parse(localStorage.getItem('userInfo'));
+        dispatch(loginSuccess(user));
+   }
+},[])
   return (
     <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
       <Container className="App">
@@ -50,7 +60,9 @@ const App = () => {
                       )
                     }
                   />
-                  <Route path="saved" element={<SavedVideos/>} />
+                  <Route path="saved" element={loggedInUser ? (<SavedVideos/>):(<Navigate to="/signin" />)} />
+                  <Route path="history" element={loggedInUser ? (<History/>):(<Navigate to="/signin" />)} />
+                  <Route path="myvideos" element={loggedInUser? (<MyVideos/>):(<Navigate to="/signin" />)} />
                   <Route path="music" element={<Tags tags="Music"/>} />
                   <Route path="sports" element={<Tags tags="sports"/>} />
                   <Route path="movie" element={<Tags tags="movie"/>} />

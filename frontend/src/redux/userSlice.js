@@ -47,6 +47,18 @@ export const userSlice = createSlice({
         state.loggedInUser.user.subscribedUsers.push(action.payload);
       }
     },
+    library: (state, action) => {
+      if (state.loggedInUser.user.saved.includes(action.payload)) {
+        state.loggedInUser.user.saved.splice(
+          state.loggedInUser.user.saved.findIndex(
+            (videoId) => videoId === action.payload
+          ),
+          1
+        );
+      } else {
+        state.loggedInUser.user.saved.push(action.payload);
+      }
+    },
   },
 });
 
@@ -59,6 +71,7 @@ export const {
   signupError,
   logout,
   subscription,
+  library,
 } = userSlice.actions;
 
 export default userSlice.reducer;

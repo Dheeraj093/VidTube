@@ -17,7 +17,7 @@ import {
   like,
 } from "../redux/videoSlice";
 import { formatDistanceToNow } from "date-fns";
-import { subscription } from "../redux/userSlice";
+import { library, subscription } from "../redux/userSlice";
 import Recommendations from "../components/Recommendations";
 import { axiosInstance } from "../utils/axiosConfig";
 import Swal from "sweetalert2";
@@ -169,17 +169,40 @@ const Video = () => {
     const fetchChannel = async () => {
       try {
         const res = await axiosInstance.get(`/users/${currentVideo?.userId}`);
-        setChannel((prev) => res.data.user);
+        // setChannel((prev) => res.data.user);
+        setChannel(res.data.user);
+        // console.log(res.data)
       } catch (error) {
         console.log(error);
       }
     };
 
-    if (currentVideo) {
+    if (currentVideo?._id===videoId) {
       fetchChannel();
     }
   }, [currentVideo]);
-
+  
+  // add to history
+  useEffect(() => {
+      const addHistory=async()=>{
+          if (!loggedInUser) {
+            return;
+        }
+        try {
+         await axiosInstance.put(`/users/history/${currentVideo?._id}`,{
+              headers: {
+              Authorization: `${loggedInUser.token}`
+            }
+          }) 
+        } catch (error) {
+          console.log(error);
+        }
+      }
+       if (currentVideo?._id===videoId) {
+          addHistory();
+       }
+  }, [currentVideo])
+  
 
   const handleLike = async () => {
     if (!loggedInUser) {
@@ -283,12 +306,17 @@ const Video = () => {
       return;
     }
     try {
-      await axiosInstance.put(`/users/saved/${currentVideo?._id}`,{
+      loggedInUser.user.saved?.includes(currentVideo?._id) ? 
+      await axiosInstance.put(`/users/unsaved/${currentVideo?._id}`,{
           headers: {
           Authorization: `${loggedInUser.token}`
         }
-      });
-     
+      }) :await axiosInstance.put(`/users/saved/${currentVideo?._id}`,{
+          headers: {
+          Authorization: `${loggedInUser.token}`
+        }
+      }) ;
+      dispatch(library(currentVideo?._id));
     } catch (error) {
       console.log(error);
       Swal.fire({
@@ -296,7 +324,7 @@ const Video = () => {
         title: "Error",
         text:
           error.response.data.error ||
-          "Error occured while handling dislikes of the video",
+          "Error occured while handling save the video",
       });
     }
   };
@@ -349,10 +377,14 @@ const Video = () => {
               Dislike
             </Button>
             <Button>
-              <ShareOutlinedIcon /> Share
+              <ShareOutlinedIcon /> 
             </Button>
             <Button onClick={handleSaved} >
-              <AddTaskOutlinedIcon /> Save
+              <AddTaskOutlinedIcon /> 
+               {loggedInUser &&
+            loggedInUser.user.saved?.includes(currentVideo?._id)
+              ? "remove"
+              : "save"}
             </Button>
           </Buttons>
         </Details>

@@ -47,8 +47,8 @@ const Recommendations = ({ tags }) => {
 
   return (
     <Recommendation>
-      {videos.length > 0 &&
-        videos.map((video) => (
+      {videos?.length > 0 &&
+        videos?.map((video) => (
           <Card type="recommendations" key={video._id} video={video} />
         ))}
     </Recommendation>

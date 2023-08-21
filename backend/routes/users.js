@@ -8,6 +8,9 @@ const {
   likeVideo,
   dislikeVideo,
   savedVideo,
+  removeVideo,
+  addHistory,
+  removeAllHistory,
 } = require("../controllers/user");
 const protect = require("../middlewares/auth");
 
@@ -36,5 +39,16 @@ router.put("/dislike/:videoId", protect, dislikeVideo);
 
 // saved video in library
 router.put("/saved/:videoId", protect, savedVideo);
+
+//remove from history
+router.put("/unsaved/:videoId", protect, removeVideo);
+
+//add to history
+router.put("/history/:videoId", protect, addHistory);
+
+router.put("/deleteHistory/:userId", protect, removeAllHistory);
+
+
+
 
 module.exports = router;

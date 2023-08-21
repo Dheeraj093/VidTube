@@ -80,7 +80,7 @@ const Signin = () => {
       const res = await axiosInstance.post("/auth/login", { email, password });
       dispatch(loginSuccess(res.data));
       setAuthToken(res.data.token);
-
+      localStorage.setItem("userInfo", JSON.stringify(res.data));
       Swal.fire(
         `Welcome ${res.data?.user.name}`,
         "Login Successful!",
@@ -112,6 +112,7 @@ const Signin = () => {
           })
           .then((res) => {
             dispatch(loginSuccess(res.data));
+            localStorage.setItem("userInfo", JSON.stringify(res.data));
             // console.log(res.data)
             Swal.fire(
               `Welcome ${res.data?.user.name}`,

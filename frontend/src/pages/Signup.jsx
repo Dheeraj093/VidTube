@@ -92,6 +92,7 @@ const Signup = () => {
         img: imgUrl,
       });
       dispatch(signupSuccess(res.data));
+      localStorage.setItem("userInfo", JSON.stringify(res.data));
       // console.log(res.data)
       Swal.fire(
         `Welcome ${res.data?.user.name}`,
@@ -122,6 +123,7 @@ const Signup = () => {
           })
           .then((res) => {
             dispatch(signupSuccess(res.data));
+            localStorage.setItem("userInfo", JSON.stringify(res.data));
             Swal.fire(
               `Welcome ${res.data?.user.name}`,
               "Sign up Successful!",

@@ -238,6 +238,28 @@ const getVideosBySearch = async (req, res, next) => {
   }
 };
 
+//My videos
+const getMyVideos = async (req, res, next) => {
+  const user = await User.findById(req.user._id);
+  try {
+    const videos = await Video.find({userId:user._id});
+
+    if (!videos) {
+      res.status(400);
+      return next(new Error("Error fetching my videos"));
+    }
+
+    res.status(200).json({
+      success: true,
+      videos,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(400);
+    return next(error);
+  }
+};
+
 // saved videos
 const savedVideos = async (req, res, next) => {
   const user = await User.findById(req.user._id);
@@ -249,6 +271,45 @@ const savedVideos = async (req, res, next) => {
       res.status(400);
       return next(new Error("Error fetching videos"));
     }
+
+    const videoIndexMap = {};
+    videoIds.forEach((id, index) => {
+      videoIndexMap[id] = index;
+    });
+
+    // Sort the videos array based on the index in videoIds
+    videos.sort((a, b) => videoIndexMap[a._id] - videoIndexMap[b._id]);
+
+    res.status(200).json({
+      success: true,
+      videos,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(400);
+    return next(error);
+  }
+};
+
+const getHistory = async (req, res, next) => {
+  const user = await User.findById(req.user._id);
+  try {
+     const videoIds = user.history; 
+
+    const videos = await Video.find({ _id: { $in: videoIds } });
+    if (!videos) {
+      res.status(400);
+      return next(new Error("Error fetching videos"));
+    }
+    
+    const videoIndexMap = {};
+    videoIds.forEach((id, index) => {
+      videoIndexMap[id] = index;
+    });
+
+    // Sort the videos array based on the index in videoIds
+    videos.sort((a, b) => videoIndexMap[b._id] - videoIndexMap[a._id]);
+
     res.status(200).json({
       success: true,
       videos,
@@ -272,5 +333,7 @@ module.exports = {
   randomVideos,
   trendingVideos,
   subscribedVideos,
+  getMyVideos,
   savedVideos,
+  getHistory,
 };
