@@ -112,6 +112,10 @@ const likeVideo = async (req, res, next) => {
       $addToSet: { likes: userId },
       $pull: { dislikes: userId },
     });
+    // for add likedVideo
+    await User.findByIdAndUpdate(userId, {
+       $push: { likedVideo: videoId },
+    });
 
     res.status(200).json({
       success: true,
@@ -130,6 +134,10 @@ const dislikeVideo = async (req, res, next) => {
     await Video.findByIdAndUpdate(videoId, {
       $addToSet: { dislikes: userId },
       $pull: { likes: userId },
+    });
+    //for remove likedVideo
+    await User.findByIdAndUpdate(userId, {
+       $pull: { likedVideo: videoId },
     });
 
     res.status(200).json({

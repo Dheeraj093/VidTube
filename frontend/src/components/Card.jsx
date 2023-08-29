@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { formatDistanceToNow } from "date-fns";
 import { axiosInstance } from "../utils/axiosConfig";
+import { useSelector } from "react-redux";
 
 const Container = styled.div`
   width: ${(props) => (props.type === "recommendations" ? "100%" : "300px")};
@@ -58,6 +59,7 @@ const VideoInfo = styled.div`
 
 const Card = ({ type, video }) => {
   const [channel, setChannel] = useState({});
+  const { loggedInUser } = useSelector((state) => state.user);
 
   useEffect(() => {
     const fetchChannel = async () => {
@@ -74,7 +76,7 @@ const Card = ({ type, video }) => {
 
   return (
     <Link
-      to={`/video/${video._id}`}
+      to={loggedInUser ? `/video/${video._id}` : '/signin'}
       style={{ textDecoration: "none", color: "inherit" }}
     >
       <Container type={type}>

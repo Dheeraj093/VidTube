@@ -14,6 +14,7 @@ import Tags from "./components/Tags"
 import SavedVideos from "./components/SavedVideos";
 import History from "./components/History";
 import MyVideos from "./components/MyVideos";
+import LikedVideos from "./components/LikedVideos";
 import { loginSuccess } from "./redux/userSlice";
 
 const Container = styled.div`
@@ -63,6 +64,7 @@ const App = () => {
                   <Route path="saved" element={loggedInUser ? (<SavedVideos/>):(<Navigate to="/signin" />)} />
                   <Route path="history" element={loggedInUser ? (<History/>):(<Navigate to="/signin" />)} />
                   <Route path="myvideos" element={loggedInUser? (<MyVideos/>):(<Navigate to="/signin" />)} />
+                  <Route path="likedvideos" element={loggedInUser? (<LikedVideos/>):(<Navigate to="/signin" />)} />
                   <Route path="music" element={<Tags tags="Music"/>} />
                   <Route path="sports" element={<Tags tags="sports"/>} />
                   <Route path="movie" element={<Tags tags="movie"/>} />

@@ -321,6 +321,36 @@ const getHistory = async (req, res, next) => {
   }
 };
 
+const getLikedVideos = async (req, res, next) => {
+  const user = await User.findById(req.user._id);
+  try {
+     const videoIds = user.likedVideo; 
+
+    const videos = await Video.find({ _id: { $in: videoIds } });
+    if (!videos) {
+      res.status(400);
+      return next(new Error("Error fetching videos"));
+    }
+
+    const videoIndexMap = {};
+    videoIds.forEach((id, index) => {
+      videoIndexMap[id] = index;
+    });
+
+    // Sort the videos array based on the index in videoIds
+    videos.sort((a, b) => videoIndexMap[a._id] - videoIndexMap[b._id]);
+
+    res.status(200).json({
+      success: true,
+      videos,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(400);
+    return next(error);
+  }
+};
+
 
 module.exports = {
   addVideo,
@@ -336,4 +366,5 @@ module.exports = {
   getMyVideos,
   savedVideos,
   getHistory,
+  getLikedVideos,
 };

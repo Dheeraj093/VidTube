@@ -35,6 +35,9 @@ const userSchema = new mongoose.Schema(
     history:{
       type: [String],
     },
+    likedVideo:{
+      type:[String],
+    },
   },
   {
     timestamps: true,

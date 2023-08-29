@@ -18,6 +18,7 @@ import FlagOutlinedIcon from "@mui/icons-material/FlagOutlined";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import SettingsBrightnessOutlinedIcon from "@mui/icons-material/SettingsBrightnessOutlined";
 import SlideshowIcon from '@mui/icons-material/Slideshow';
+import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
@@ -148,6 +149,15 @@ const Sidebar = ({ darkMode, setDarkMode }) => {
           <Item>
             <SlideshowIcon />
             My Videos
+          </Item>
+        </Link>
+        <Link
+          to="/likedvideos"
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
+          <Item>
+            <ThumbUpOutlinedIcon />
+            Liked Videos
           </Item>
         </Link>
         <Hr />

@@ -13,6 +13,7 @@ const {
   savedVideos,
   getHistory,
   getMyVideos,
+  getLikedVideos,
 } = require("../controllers/video");
 const protect = require("../middlewares/auth");
 const protectforsub = require("../middlewares/subs");
@@ -35,6 +36,9 @@ router.get("/myvideos/:userID", protectforsub, getMyVideos);
 router.get("/favorite/:userID",protectforsub, savedVideos);
 //get history
 router.get("/history/:userID",protectforsub, getHistory);
+//liked Videos
+router.get("/likedVideos/:userID",protectforsub, getLikedVideos);
+
 
 
 module.exports = router;

@@ -99,7 +99,7 @@ const Comments = ({ videoId, loggedInUser }) => {
         videoId,
         description: newCommentText,
       });
-      Swal.fire(`Good job!`, "Your comment was Successful!", "success");
+      // Swal.fire(`Good job!`, "Your comment was Successful!", "success");
       setComments((prev) => [...prev, res.data.comment]);
       setNewCommentText("");
       settoggleCommentButtons((prev) => false);
